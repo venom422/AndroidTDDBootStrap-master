@@ -121,5 +121,4 @@ Based on the project architecture I'm currently working on, [YOLO](https://www.y
 ![codecov.io](http://codecov.io/github/Piasy/AndroidTDDBootStrap/branch.svg?branch=master)
 
 ## Acknowledgement
-+  Thanks for our team, [YOLO](https://www.yoloyolo.tv/).
 +  Thanks for my colleague & mentor, [promeG](https://github.com/promeG/).
