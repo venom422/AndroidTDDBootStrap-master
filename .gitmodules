@@ -1,0 +1,9 @@
+[submodule "AndroidCodeQualityConfig"]
+	path = AndroidCodeQualityConfig
+	url = git@github.com:Piasy/AndroidCodeQualityConfig.git
+[submodule "base"]
+	path = base
+	url = git@github.com:Piasy/AndroidTDDBootStrap-base.git
+[submodule "testbase"]
+	path = testbase
+	url = git@github.com:Piasy/AndroidTDDBootStrap-testbase.git

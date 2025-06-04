@@ -1,0 +1,109 @@
+import com.android.build.gradle.internal.tasks.AndroidTestTask
+
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: 'buildsystem/dependencies.gradle'
+
+buildscript {
+    apply from: 'buildsystem/dependencies.gradle'
+
+    configurations.all {
+        resolutionStrategy {
+            dependencySubstitution {
+                substitute module('com.tunnelvisionlabs:antlr4') with module(
+                        'org.antlr:antlr4:4.5.3')
+            }
+        }
+    }
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            // For fabric
+            url 'https://maven.fabric.io/public'
+        }
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+        classpath 'de.mobilej.unmock:UnMockPlugin:0.5.1'
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'
+        classpath "net.rdrei.android.buildtimetracker:gradle-plugin:0.9.0"
+        classpath 'com.frogermcs.androiddevmetrics:androiddevmetrics-plugin:0.4'
+        classpath 'com.github.promeg:android-git-sha-plugin:1.0.1'
+        classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.8"
+        classpath('com.uber:okbuck:0.17.2') {
+            exclude module: 'gradle'
+        }
+
+        classpath 'me.tatarka:gradle-retrolambda:3.3.0'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
+        classpath "com.squareup.sqldelight:gradle-plugin:$sqlDelightVersion"
+        classpath "com.jakewharton:butterknife-gradle-plugin:$butterKnifeVersion"
+        classpath 'io.fabric.tools:gradle:1.22.0'
+        classpath('com.chenenyu.router:gradle-plugin:0.3.0') {
+            exclude module: 'gradle'
+        }
+    }
+    configurations.classpath.exclude group: 'com.android.tools.external.lombok'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            // For icepick
+            url 'https://clojars.org/repo/'
+        }
+        maven {
+            // For fabric
+            url 'https://maven.fabric.io/public'
+        }
+        maven { url "https://jitpack.io" }
+        maven {
+            url "http://dl.bintray.com/piasy/maven"
+        }
+    }
+}
+
+subprojects {
+    afterEvaluate {
+        // Log instrumentation tests results.
+        tasks.withType(AndroidTestTask) { task ->
+            task.doFirst {
+                ant.lifecycleLogLevel = org.gradle.api.AntBuilder.AntMessagePriority.DEBUG
+            }
+        }
+    }
+}
+
+apply from: 'buildsystem/okbuck.gradle'
+
+apply plugin: "build-time-tracker"
+buildtimetracker {
+    reporters {
+        csv {
+            output "build/times.csv"
+            append true
+            header false
+        }
+
+        summary {
+            ordered false
+            threshold 50
+            barstyle "unicode"
+        }
+
+        csvSummary {
+            csv "build/times.csv"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
